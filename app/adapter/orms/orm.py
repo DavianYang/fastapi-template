@@ -6,7 +6,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import mapper, relationship
 
-from src.main.domain.user import User
+from app.domain.user import User
 
 metadata = MetaData()
 

@@ -5,8 +5,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import sessionmaker
 
-from src.main.core.config import DATABASE_URL
-from src.main.adapter.orms import orm
+from app.core.config import DATABASE_URL
+from app.adapter.orms import orm
 
 db = Database(DATABASE_URL)
 
