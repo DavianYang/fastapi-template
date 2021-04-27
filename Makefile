@@ -13,12 +13,10 @@ down:
 	docker-compose down --remove-orphans
 
 test: up
-	docker-compose exec web pytest .
-
-logs:
-	docker-compose logs app | tail -100
+	docker-compose exec web pytest . -T
 
 down:
 	docker-compose down --remove-orphans
 
 all: down build up test
+	
