@@ -13,7 +13,7 @@ down:
 	docker-compose down --remove-orphans
 
 test: up
-	docker-compose run --rm --no-deps --entrypoint=pytest api /tests/test_api/test_routes/
+	docker-compose run --rm --no-deps --entrypoint=pytest /tests/test_api/test_routes/
 
 logs:
 	docker-compose logs app | tail -100
