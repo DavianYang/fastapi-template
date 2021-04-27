@@ -3,7 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.core.config import ALLOWED_HOSTS, API_PREFIX, DEBUG, PROJECT_NAME, VERSION
 from app.core.events import create_start_app_handler, create_stop_app_handler
-from app.router.api import router as api_router
+from app.api.routes.api import router as api_router
 
 def get_application() -> FastAPI:
     application = FastAPI(title=PROJECT_NAME, debug=DEBUG, version=VERSION)
@@ -24,5 +24,3 @@ def get_application() -> FastAPI:
     return application
 
 app = get_application()
-    
-    
