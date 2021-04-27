@@ -37,4 +37,5 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Test with pytest
       run: |
-        make test
+        docker-compose up -d --build
+        docker-compose exec web pytest .
