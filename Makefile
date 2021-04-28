@@ -13,7 +13,7 @@ down:
 	docker-compose down --remove-orphans
 
 test: up
-	docker-compose exec web pytest . -T
+	docker-compose run --rm --no-deps --entrypoint=pytest app /tests/test_api/test_routes
 
 down:
 	docker-compose down --remove-orphans

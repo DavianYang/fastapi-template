@@ -1,32 +1,26 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import List, NewType, Optional
+from typing import Optional
 
-UserId = NewType("UserId", int)
+from uuid import UUID
+from pydantic import BaseModel, EmailStr, HttpUrl, SecretStr, SecretBytes
+from pydantic.types import constr
 
-class User:
-    def __init__(
-        self,
-        id: UserId,
-        name: str,
-        email: str,
-        photo: str,
-        password: str,
-        password_confirm: str
-    ) -> None:
-        self.name = name
-        self.email = email
-        self.photo = photo
-        self.password = password
-        self.password_confirm = password_confirm
-        
-    def __repr__(self) -> str:
-        return f"<User {self.id}>"
+class User(BaseModel):
+    id: UUID
+    name: constr(max_length=60)
+    email: EmailStr
+    photos: Optional[HttpUrl]
+    password: SecretStr
+    password_confirm: SecretBytes
     
-    def __eq__(self, o: object) -> bool:
-        if not isinstance(o, User):
+    class Config:
+        frozen=True
+        orm_mode=True
+        
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, User):
             return False
-        return o.id == self.id
+        return other.id == self.id
     
     def __hash__(self) -> int:
         return hash(self.id)
