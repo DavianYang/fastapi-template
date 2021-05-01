@@ -2,18 +2,18 @@ import abc
 
 class BaseRepository(abc.ABC):
     @abc.abstractmethod
-    def _create(self):
+    async def _create(self):
         raise NotImplementedError
     
     @abc.abstractmethod
-    def _get(self):
+    async def _get(self):
         raise NotImplementedError
     
     @abc.abstractmethod
-    def _update(self):
+    async def _update(self):
         raise NotImplementedError
     
     @abc.abstractmethod
-    def _delete(self):
+    async def _delete(self):
         raise NotImplementedError
         

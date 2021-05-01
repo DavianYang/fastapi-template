@@ -2,7 +2,7 @@ from typing import Callable
 
 from fastapi import FastAPI
 
-from app.adapter.events import close_db_connect, connect_to_db
+from app.events.db_handlers import close_db_connect, connect_to_db
 
 def create_start_app_handler(app: FastAPI) -> Callable:
     async def start_app() -> None:

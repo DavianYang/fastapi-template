@@ -1,13 +1,13 @@
 from app.adapter.repositories.base import BaseRepository
 from app.adapter.orms import orm
-from app.domain.user import User
+from app.models.domain.users import User, UserInDB
 
 class UserRepository(BaseRepository):
-    def __init__(self, session) -> None:
-        super().__init__()
-        self.session = session
-        
-    def _create(self, user: User):
-        self.session.add(user)
-        
-        
+    async def _create(
+        self,
+        name: str,
+        email: str,
+        password: str
+    ) -> UserInDB:
+        user = UserInDB(name=name, email=email)
+        user.hash_password(password)

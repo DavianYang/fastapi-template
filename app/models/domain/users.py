@@ -17,6 +17,6 @@ class UserInDB(IDModelMixin, DateTimeModelMixin, User):
     def check_password(self, password: str) -> bool:
         pass
     
-    def change_password(self, password: str) -> None:
+    def hash_password(self, password: str) -> None:
         pass
     
