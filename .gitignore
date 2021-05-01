@@ -146,5 +146,6 @@ Thumbs.db
 # profiling data
 .prof
 
-
+playground/
+setup.py
 # End of https://www.toptal.com/developers/gitignore/api/python

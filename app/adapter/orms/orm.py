@@ -1,6 +1,3 @@
-from enum import auto
-from operator import mod
-from re import S, T
 from sqlalchemy import (
     Table, MetaData, Column, Integer, String, Date,
     ForeignKey

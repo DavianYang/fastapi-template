@@ -10,7 +10,7 @@ from app.adapter.orms import orm
 
 db = Database(DATABASE_URL)
 
-orm.start_mappers()
+# orm.start_mappers()
 get_session = sessionmaker(bind=create_engine(DATABASE_URL))
 
 async def connect_to_db() -> None:
