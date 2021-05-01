@@ -9,24 +9,11 @@ from app.models.domain.rwmodel import RWModel
 from app.models.common import DateTimeModelMixin, IDModelMixin
 
 class User(RWModel):
-    id: UUID
-    name: constr(max_length=60)
-    email: EmailStr
+    name: str
+    email: str
     photos: Optional[HttpUrl]
-    
-    class Config:
-        frozen=True
-        orm_mode=True
-        
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, User):
-            return False
-        return other.id == self.id
-    
-    def __hash__(self) -> int:
-        return hash(self.id)
-    
 
+    
 class UserInDB(IDModelMixin, DateTimeModelMixin, User):
     salt: str = ""
     hashed_password: SecretStr = ""
