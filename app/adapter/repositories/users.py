@@ -1,25 +1,23 @@
 from app.events.db_handlers import database
 from app.adapter.repositories.base import BaseRepository
 from app.adapter.orms.orm import users
-from app.models.domain.users import User, UserInDB
+from app.models.domain.users import UserInDB
 
 class UserRepository(BaseRepository):
+    def __init__(self, database=database) -> None:
+        self.database = database
+    
     async def _get(self):
         return await super()._get()
     
-    async def _create(
-        self,
-        name: str,
-        email: str,
-        password: str
-    ):
-        user = UserInDB(name=name, email=email)
-        user.hash_password(password)
-        
-        query = users.insert().values(name=name, email=email, password=password)
-        user_id = await database.execute(query)
-        
-        return {**user.dict(), "id": user_id}
+    async def _create(self, user: UserInDB):
+        return await self.database.execute(
+            users.insert().values(
+                name=user.name,
+                email=user.email,
+                password=user.hashed_password
+            )
+        )
     
     async def _update(self):
         return await super()._update()

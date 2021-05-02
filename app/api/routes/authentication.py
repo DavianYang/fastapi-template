@@ -3,7 +3,7 @@ from fastapi.params import Body, Depends
 from starlette.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
 from app.models.schemas.users import UserInResponse, UserInLogin, UserInCreate
-from app.adapter.repositories.users import UserRepository
+from app.services.users import UserService
 
 router = APIRouter()
 
@@ -18,12 +18,13 @@ async def login(
     '/register', # demo routes -> removes "register"
     status_code=HTTP_201_CREATED,
     # response_model=UserInResponse
+    name="auth:register"
 )
 async def register(
     user_create: UserInCreate = Body(..., embed=True, alias="user"),
-    user_repo: UserRepository = Depends(UserRepository)
+    user_service: UserService = Depends(UserService)
 ):
-    user = await user_repo._create(**user_create.dict())
+    user = await user_service.create_user(**user_create.dict())
     
     return user
     
