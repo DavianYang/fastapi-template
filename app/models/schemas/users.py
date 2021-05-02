@@ -1,4 +1,5 @@
-from os import name
+from pydantic import EmailStr
+
 from app.models.domain.users import User
 from app.models.schemas.rwschema import RWSchema
 from typing import Optional
@@ -13,6 +14,8 @@ class UserInLogin(RWSchema):
     
 class UserInCreate(RWSchema):
     name: str
+    email: EmailStr
+    password: str
     
     
 class UserInUpdate(BaseModel):
@@ -24,6 +27,7 @@ class UserInUpdate(BaseModel):
     
 class UserWithToken(User):
     token: str
+    
     
 class UserInResponse(RWSchema):
     user: UserWithToken

@@ -13,4 +13,6 @@ users = Table(
     Column('email', String(255), nullable=False),
     Column('photo', String(255), nullable=True),
     Column('password', String(255), nullable=False),
+    Column('created_at', Date, nullable=True), # change to true later
+    Column('updated_at', Date, nullable=True)
 )
