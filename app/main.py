@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Depends
 from starlette.middleware.cors import CORSMiddleware
 
-from app.config import get_settings, Settings
+from app.config import settings, Settings
 from app.events.app_handlers import create_start_app_handler, create_stop_app_handler
 from app.api.routes.api import router as api_router
 
-def get_application(settings: Settings = get_settings()) -> FastAPI:
+def get_application(settings: Settings = settings) -> FastAPI:
     application = FastAPI(
         title=settings.PROJECT_NAME,
         debug=settings.DEBUG,
