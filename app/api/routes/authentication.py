@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from fastapi.params import Body, Depends
+from fastapi import Body, Depends
 from starlette.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
 from app.models.schemas.users import UserInResponse, UserInLogin, UserInCreate

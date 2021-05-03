@@ -1,10 +1,12 @@
+from databases import Database
+
 from app.events.db_handlers import database
 from app.adapter.repositories.base import BaseRepository
 from app.adapter.orms.orm import users
 from app.models.domain.users import UserInDB
 
 class UserRepository(BaseRepository):
-    def __init__(self, database=database) -> None:
+    def __init__(self, database: Database = database) -> None:
         self.database = database
     
     async def _get(self):

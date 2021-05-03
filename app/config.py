@@ -1,26 +1,29 @@
+import os
 from typing import List
+from functools import lru_cache
 
-from databases import DatabaseURL
-from starlette.config import Config
-from starlette.datastructures import CommaSeparatedStrings, Secret
+from pydantic import BaseSettings
 
-MAJOR = 0
-MINOR = 0
-PATCH = ''
-SUFFIX = '' # eg.rc0
+class Settings(BaseSettings):
+    PROJECT_NAME: str = "Main"
+    DEBUG: bool = False
+    API_PREFIX: str = "/api"
+    
+    MAJOR: int = 0
+    MINOR: int = 0
+    PATCH: str = ''
+    SUFFIX: str = ''
+    
+    VERSION: str = f"{MAJOR}.{MINOR}.{PATCH}{SUFFIX}"
+    
+    ALLOWED_HOSTS: List[str] = [""]
+    DB_CONNECTION: str = None
+    
+    class Config:
+        env_file = '.env'
+        env_file_encoding = 'utf-8'
 
-API_PREFIX = "/api"
-VERSION = f"{MAJOR}.{MINOR}.{PATCH}{SUFFIX}"
-
-config = Config('.env')
-
-DEBUG: bool = config("DEBUG", cast=bool, default=False)
-
-DATABASE_URL: DatabaseURL = config("DB_CONNECTION")
-
-PROJECT_NAME: str = config("PROJECT_NAME", default="Main")
-ALLOWED_HOSTS: List[str] = config(
-    "ALLOWED_HOSTS",
-    cast=CommaSeparatedStrings,
-    default="",
-)
+    
+@lru_cache()
+def get_settings():
+    return Settings()

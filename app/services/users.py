@@ -1,14 +1,14 @@
-from fastapi.params import Depends
+from fastapi import Depends
 
 from app.adapter.repositories.users import UserRepository
 from app.models.domain.users import UserInDB
 
-class UserService:
+class UserService:        
     async def create_user(
         self,
         name: str,
         email: str,
-        password: str,
+        password: str
     ):
         user_repo = UserRepository()
         user = UserInDB(name=name, email=email)
