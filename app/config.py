@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     JWT_SUBJECT: str = "access"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7 # one week
+    SECRET_KEY: str = ""
     
     class Config:
         env_file = '.env'
