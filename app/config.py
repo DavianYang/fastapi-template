@@ -1,8 +1,13 @@
 import os
+from enum import Enum
 from typing import List
 from functools import lru_cache
 
 from pydantic import BaseSettings, PostgresDsn
+
+class Environment(str, Enum):
+    DEVELOPMENT = "dev"
+    PRODUCTION = "prod"
 
 class Settings(BaseSettings):
     # Version
@@ -20,11 +25,11 @@ class Settings(BaseSettings):
     
     # Database
     DB_TYPE: str = "postgresql"
-    DB_USER: str = ""
+    DB_USER: str = "postgres"
     DB_HOST: str = "localhost"
-    DB_PASSWORD: str = ""
+    DB_PASSWORD: str = "1234"
     DB_PORT: int = 5431
-    DB_NAME: str = ""
+    DB_NAME: str = "database"
     DB_CONNECTION: PostgresDsn = f"{DB_TYPE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     
     # JWT
@@ -34,7 +39,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = ""
     
     class Config:
-        env_file = '.env'
+        env_file = os.path.join(os.pardir, '.env')
         env_file_encoding = 'utf-8'
 
     
@@ -42,4 +47,4 @@ class Settings(BaseSettings):
 def get_settings():
     return Settings()
 
-settings = get_settings()
+settings = Settings()
