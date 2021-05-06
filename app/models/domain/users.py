@@ -3,6 +3,7 @@ from typing import Optional
 
 from app.models.domain.rwmodel import RWModel
 from app.models.common import DateTimeModelMixin, IDModelMixin
+from app.services import security
 
 class User(RWModel):
     name: str
@@ -15,8 +16,9 @@ class UserInDB(IDModelMixin, DateTimeModelMixin, User):
     hashed_password: str = ""
     
     def check_password(self, password: str) -> bool:
-        pass
+        return security.verify_password(self.salt + password, self.hashed_password)
     
     def hash_password(self, password: str) -> None:
-        pass
+        self.salt = security.generate_salt()
+        self.hashed_password = security.get_password_hash(self.salt + password)
     

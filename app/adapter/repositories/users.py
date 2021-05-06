@@ -9,9 +9,9 @@ class UserRepository(BaseRepository):
     def __init__(self, database: Database = database) -> None:
         self.database = database
     
-    async def _get(self, entity: str):
+    async def _get(self, id: str):
         return await self.database.fetch_one(
-            users.select(entity)
+            users.select(users.id==id)
         )
     
     async def _create(self, user: UserInDB):
