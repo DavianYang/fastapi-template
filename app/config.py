@@ -11,7 +11,7 @@ class Environment(str, Enum):
 
 class Settings(BaseSettings):
     # Version
-    MAJOR: int = 0
+    MAJOR: int = 1
     MINOR: int = 0
     PATCH: str = ''
     SUFFIX: str = ''
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     # App
     PROJECT_NAME: str = "Fastapi Template"
     DEBUG: bool = False
-    API_PREFIX: str = "/api"
+    API_PREFIX: str = f"/api/{MAJOR}"
     ALLOWED_HOSTS: List[str] = [""]
     
     # Database
