@@ -1,7 +1,9 @@
 import datetime
+
 from pydantic import BaseConfig, BaseModel
 
 from app.utils import convert_datetime_to_realworld, convert_field_to_camel_case
+
 
 class RWModel(BaseModel):
     class Config(BaseConfig):

@@ -2,15 +2,14 @@ from datetime import datetime, timedelta
 from typing import Dict
 
 import jwt
+
 from app.config import settings
-from app.models.schemas.users import User
 from app.models.schemas.jwt import JWTMeta, JWTUser
+from app.models.schemas.users import User
+
 
 def create_jwt_token(
-    *,
-    jwt_content: Dict[str, str],
-    secret_key: str,
-    expires_delta: timedelta
+    *, jwt_content: Dict[str, str], secret_key: str, expires_delta: timedelta
 ):
     to_encode = jwt_content.copy()
     expire = datetime.utcnow() + expires_delta
@@ -18,9 +17,9 @@ def create_jwt_token(
     return jwt.encode(to_encode, secret_key, algorithm=settings.ALGORITHM).decode()
 
 
-def create_access_token_for_user(user: User, secret_key: str) -> str:
+def create_access_token_for_user(user_id: int, secret_key: str) -> str:
     return create_jwt_token(
-        jwt_content=JWTUser(name=user.name).dict(),
+        jwt_content=JWTUser(id=user_id).dict(),
         secret_key=secret_key,
-        expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
     )

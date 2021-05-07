@@ -19,4 +19,3 @@ down:
 	docker-compose down --remove-orphans
 
 all: down build up test
-	
