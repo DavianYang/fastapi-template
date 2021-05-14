@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import Optional
 
-from app.models.common import DateTimeModelMixin, IDModelMixin
+from pydantic import HttpUrl
+
+from app.models.common import AuthModelMixin, DateTimeModelMixin, IDModelMixin
 from app.models.domain.rwmodel import RWModel
 from app.services import security
 
@@ -10,10 +12,10 @@ from app.services import security
 class User(RWModel):
     name: str
     email: str
-    photos: Optional[str]
+    photos: Optional[HttpUrl]
 
 
-class UserInDB(IDModelMixin, DateTimeModelMixin, User):
+class UserInDB(IDModelMixin, DateTimeModelMixin, AuthModelMixin, User):
     salt: str = ""
     hashed_password: str = ""
 

@@ -9,4 +9,4 @@ class JWTMeta(BaseModel):
 
 
 class JWTUser(BaseModel):
-    id: int
+    name: str

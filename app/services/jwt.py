@@ -17,9 +17,9 @@ def create_jwt_token(
     return jwt.encode(to_encode, secret_key, algorithm=settings.ALGORITHM).decode()
 
 
-def create_access_token_for_user(user_id: int, secret_key: str) -> str:
+def create_access_token_for_user(user: User, secret_key: str) -> str:
     return create_jwt_token(
-        jwt_content=JWTUser(id=user_id).dict(),
+        jwt_content=JWTUser(name=user.name).dict(),
         secret_key=secret_key,
         expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
     )

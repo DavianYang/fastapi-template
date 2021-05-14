@@ -1,6 +1,7 @@
-from app import services
+import pytest
+
 from app.adapter.repositories.base import BaseRepository
-from app.models.domain.users import User, UserInDB
+from app.models.domain.users import UserInDB
 from app.services.users import UserService
 
 
@@ -24,6 +25,7 @@ class FakeUserRepository(BaseRepository):
 service = UserService()
 
 
+@pytest.mark.asyncio
 async def test_register_user():
     repo = FakeUserRepository([])
     user_id = await service.create_user("johndoe", "johndoe@gmail.com", "123456789")

@@ -1,24 +1,35 @@
 from databases import Database
+from pydantic import EmailStr
+from sqlalchemy import Table
 
-from app.adapter.orms.orm import users
+from app.adapter.database import database
+from app.adapter.orms.user import users
 from app.adapter.repositories.base import BaseRepository
-from app.events.db_handlers import database
 from app.models.domain.users import UserInDB
 
 
 class UserRepository(BaseRepository):
-    def __init__(self, database: Database = database) -> None:
+    def __init__(self, users: Table = users, database: Database = database) -> None:
         self.database = database
+        self.users = users
 
-    async def _get(self, entity: str):
-        return await self.database.fetch_one(users.select(entity))
+    async def _get(self, id: int):
+        query = self.users.select().where(self.users.c.id == id)
+        return await self.database.fetch_one(query)
+
+    async def _get_by_email(self, email: EmailStr):
+        query = self.users.select().where(self.users.c.email == email)
+        return await self.database.fetch_one(query)
+
+    async def _get_by_name(self, name: str):
+        query = self.users.select().where(self.users.c.name == name)
+        return await self.database.fetch_one(query)
 
     async def _create(self, user: UserInDB):
-        return await self.database.execute(
-            users.insert().values(
-                name=user.name, email=user.email, password=user.hashed_password
-            )
-        )
+        user_dict = user.dict()
+        query = self.users.insert()
+        await self.database.execute(query, user_dict)
+        return user
 
     async def _update(self):
         return await super()._update()

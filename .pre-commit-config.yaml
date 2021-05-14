@@ -28,3 +28,4 @@ repos:
     rev: 20.8b1
     hooks:
       - id: black
+        entry: bash -c 'yapf "$@"; git add -u' --
