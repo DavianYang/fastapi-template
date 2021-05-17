@@ -3,7 +3,7 @@ from enum import Enum
 from functools import lru_cache
 from typing import List
 
-from pydantic import BaseSettings, PostgresDsn
+from pydantic import BaseSettings
 
 
 class Environment(str, Enum):
@@ -13,6 +13,10 @@ class Environment(str, Enum):
 
 class Settings(BaseSettings):
     ENV: Environment = Environment.DEVELOPMENT
+
+    # Authorization
+    HEADER_KEY: str = "Authorization"
+    JWT_TOKEN_PREFIX: str = "Token"
 
     # Version
     MAJOR: int = 1

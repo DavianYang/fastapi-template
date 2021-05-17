@@ -25,4 +25,5 @@ class UserService:
         user = UserInDB(name=name, email=email)
         user.hash_password(password)
         user = await self.repo._create(user)
+
         return user
