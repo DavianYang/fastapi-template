@@ -1,14 +1,15 @@
-from typing import HTTPException, Optional
+from typing import Callable, Optional
 
-from fastapi import Security
+from fastapi import Depends, HTTPException, Security
 from fastapi.security import APIKeyHeader
 from starlette import requests, status
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.config import settings
-
-# from app.services.users import UserService
+from app.errors.database import EntityDoesNotExist
 from app.resources import strings
+from app.services import jwt
+from app.services.users import UserService
 
 
 class RWAPIKeyHeader(APIKeyHeader):
@@ -20,6 +21,10 @@ class RWAPIKeyHeader(APIKeyHeader):
                 status_code=orginal_auth_exc.status_code,
                 detail=strings.AUTHENTICATION_REQUIRED,
             )
+
+
+def get_current_user_authorizer(*, required: bool = True) -> Callable:
+    return _get_current_user if required else _get_current_user_optional
 
 
 def _get_authorization_header(
@@ -40,8 +45,28 @@ def _get_authorization_header(
     return token
 
 
-# async def _get_current_user(
-#     service: UserService = Depends(UserService),
-#     token
-# ):
-#     pass
+async def _get_current_user(
+    token,
+    service: UserService = Depends(UserService),
+):
+    try:
+        username = jwt.get_username_from_token(token, str(settings.SECRET_KEY))
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=strings.MALFORMED_PAYLOAD
+        )
+
+    try:
+        return await service.get_user_by_name(name=username)
+    except EntityDoesNotExist:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=strings.MALFORMED_PAYLOAD
+        )
+
+
+async def _get_current_user_optional(
+    token, service: UserService = Depends(UserService)
+):
+    if token:
+        return await _get_current_user(service, token)
+    return None

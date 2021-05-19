@@ -1,6 +1,7 @@
 from databases import Database
 from pydantic import EmailStr
 from sqlalchemy import Table
+from sqlalchemy.sql.selectable import Select
 
 from app.adapter.database import database
 from app.adapter.orms.user import users
@@ -13,17 +14,16 @@ class UserRepository(BaseRepository):
         self.database = database
         self.users = users
 
-    async def _get(self, id: int):
-        query = self.users.select().where(self.users.c.id == id)
+    async def _get(self, query: Select):
         return await self.database.fetch_one(query)
 
     async def _get_by_email(self, email: EmailStr):
         query = self.users.select().where(self.users.c.email == email)
-        return await self.database.fetch_one(query)
+        return await self._get(query)
 
     async def _get_by_name(self, name: str):
         query = self.users.select().where(self.users.c.name == name)
-        return await self.database.fetch_one(query)
+        return await self._get(query)
 
     async def _create(self, user: UserInDB):
         user_dict = user.dict()
