@@ -10,8 +10,9 @@ router = APIRouter()
 
 
 @router.get("", response_model=UserInResponse, name="users:get-current-user")
-async def retrieve_current_user(user: User = Depends(get_current_user_authorizer())):
-    print("User", user)
+async def retrieve_current_user(
+    user: User = Depends(get_current_user_authorizer()),
+) -> UserInResponse:
     token = jwt.create_access_token_for_user(user, str(settings.SECRET_KEY))
     return UserInResponse(
         user=UserWithToken(name=user.name, email=user.email, token=token)

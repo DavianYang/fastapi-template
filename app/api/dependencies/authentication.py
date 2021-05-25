@@ -46,7 +46,7 @@ def _get_authorization_header(
 
 
 async def _get_current_user(
-    token,
+    token: str,
     service: UserService = Depends(UserService),
 ):
     try:
