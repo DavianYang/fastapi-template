@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from typing import Optional
 
 from fastapi import Depends, HTTPException, Security
 from fastapi.security import APIKeyHeader
@@ -23,8 +23,8 @@ class RWAPIKeyHeader(APIKeyHeader):
             )
 
 
-def get_current_user_authorizer(*, required: bool = True) -> Callable:
-    return _get_current_user if required else _get_current_user_optional
+# def get_current_user_authorizer(*, required: bool = True) -> Callable:
+#     return _get_current_user if required else _get_current_user_optional
 
 
 def _get_authorization_header(
