@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Body, Depends, HTTPException
-from starlette.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from fastapi import APIRouter, Body, Depends, HTTPException, status
 
 from app.config import settings
 from app.errors.database import EntityDoesNotExist
@@ -17,13 +16,18 @@ from app.services.users import UserService
 router = APIRouter()
 
 
-@router.post("/login", response_model=UserInResponse, name="auth:login")
+@router.post(
+    "/login",
+    response_model=UserInResponse,
+    name="auth:login",
+    status_code=status.HTTP_200_OK,
+)
 async def login(
     user_login: UserInLogin = Body(..., embed=True, alias="user"),
     user_service: UserService = Depends(UserService),
 ):
     wrong_login_error = HTTPException(
-        status_code=HTTP_400_BAD_REQUEST, detail=strings.INCORRECT_LOGIN_INPUT
+        status_code=status.HTTP_400_BAD_REQUEST, detail=strings.INCORRECT_LOGIN_INPUT
     )
 
     try:
@@ -43,9 +47,9 @@ async def login(
 
 @router.post(
     "",
-    status_code=HTTP_201_CREATED,
     response_model=UserInResponse,
     name="auth:register",
+    status_code=status.HTTP_201_CREATED,
 )
 async def register(
     user_create: UserInCreate = Body(..., embed=True, alias="user"),
@@ -53,12 +57,12 @@ async def register(
 ):
     if await check_username_is_taken(user_service, user_create.name):
         raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST, detail=strings.USERNAME_TAKEN
+            status_code=status.HTTP_400_BAD_REQUEST, detail=strings.USERNAME_TAKEN
         )
 
     if await check_email_is_taken(user_service, user_create.email):
         raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST, detail=strings.EMAIL_TAKEN
+            status_code=status.HTTP_400_BAD_REQUEST, detail=strings.EMAIL_TAKEN
         )
 
     user = await user_service.create_user(**user_create.dict())

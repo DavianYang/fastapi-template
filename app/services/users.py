@@ -1,6 +1,9 @@
+import datetime as dt
+
 from app.adapter.repositories.users import UserRepository
 from app.errors.database import EntityDoesNotExist
 from app.models.domain.users import UserInDB
+from app.models.schemas.users import UserInUpdate
 
 
 class UserService:
@@ -27,3 +30,15 @@ class UserService:
         user = await self.repo._create(user)
 
         return user
+
+    async def update_user(self, user: UserInDB, update_user: UserInUpdate):
+        user.name = update_user.name or user.name
+        user.email = update_user.email or user.email
+        user.image = update_user.image or user.image
+        user.updated_at = dt.datetime.now()
+
+        if update_user.password:
+            user.hash_password(update_user.password)
+
+        user_update = await self.repo._update(user)
+        return user_update

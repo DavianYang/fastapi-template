@@ -12,12 +12,10 @@ class UserTable(Base):
     name = Column(String(length=60), nullable=False)
     email = Column(String(length=320), nullable=False)
     hashed_password = Column(String(length=72), nullable=False)
-    photos = Column(String(length=255), nullable=True)
+    image = Column(String(length=255), nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
     is_superuser = Column(Boolean, default=False, nullable=False)
-    created_at = Column(
-        DateTime, nullable=True, default=dt.datetime.utcnow
-    )  # change to true later
+    created_at = Column(DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(DateTime, nullable=True, default=dt.datetime.utcnow)
     salt = Column(String(length=255), nullable=True)
 

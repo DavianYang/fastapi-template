@@ -1,8 +1,7 @@
 from typing import Optional
 
-from fastapi import Depends, HTTPException, Security
+from fastapi import Depends, HTTPException, Security, requests, status
 from fastapi.security import APIKeyHeader
-from starlette import requests, status
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.config import settings
@@ -23,10 +22,6 @@ class RWAPIKeyHeader(APIKeyHeader):
             )
 
 
-# def get_current_user_authorizer(*, required: bool = True) -> Callable:
-#     return _get_current_user if required else _get_current_user_optional
-
-
 def _get_authorization_header(
     api_key: str = Security(RWAPIKeyHeader(name=settings.HEADER_KEY)),
 ) -> str:
@@ -45,7 +40,7 @@ def _get_authorization_header(
     return token
 
 
-async def _get_current_user(
+async def get_current_user(
     token: str,
     service: UserService = Depends(UserService),
 ):
@@ -68,5 +63,5 @@ async def _get_current_user_optional(
     token, service: UserService = Depends(UserService)
 ):
     if token:
-        return await _get_current_user(service, token)
+        return await get_current_user(service, token)
     return None
