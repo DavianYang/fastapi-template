@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import UUID4, BaseModel, EmailStr
 
 from app.models.domain.users import User
 from app.models.schemas.rwschema import RWSchema
@@ -22,6 +22,10 @@ class UserInUpdate(BaseModel):
     email: Optional[EmailStr] = None
     password: Optional[str] = None
     image: Optional[str] = None
+
+
+class UserInDelete(BaseModel):
+    id: UUID4
 
 
 class UserWithToken(User):

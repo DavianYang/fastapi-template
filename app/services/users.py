@@ -10,6 +10,11 @@ class UserService:
     def __init__(self) -> None:
         self.repo = UserRepository()
 
+    async def get_user_by_id(self, id: str):
+        user_row = await self.repo._get_by_id(id)
+        if user_row:
+            return UserInDB(**user_row)
+
     async def get_user_by_name(self, name: str):
         user_row = await self.repo._get_by_name(name)
         if user_row:
@@ -42,3 +47,8 @@ class UserService:
 
         user_update = await self.repo._update(user)
         return user_update
+
+    async def delete_user(self, user: UserInDB):
+        user.is_active = False
+
+        await self.repo._delete(user)

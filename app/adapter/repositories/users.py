@@ -17,12 +17,16 @@ class UserRepository(BaseRepository):
     async def _get(self, query: Select):
         return await self.database.fetch_one(query)
 
-    async def _get_by_email(self, email: EmailStr):
-        get_query = self.users.select().where(self.users.c.email == email)
+    async def _get_by_id(self, id: str):
+        get_query = self.users.select().where(self.users.c.id == id)
         return await self._get(get_query)
 
     async def _get_by_name(self, name: str):
         get_query = self.users.select().where(self.users.c.name == name)
+        return await self._get(get_query)
+
+    async def _get_by_email(self, email: EmailStr):
+        get_query = self.users.select().where(self.users.c.email == email)
         return await self._get(get_query)
 
     async def _create(self, user: UserInDB):
@@ -39,5 +43,9 @@ class UserRepository(BaseRepository):
         await self.database.execute(update_query)
         return user
 
-    async def _delete(self):
-        return await super()._delete()
+    async def _delete(self, user: UserInDB):
+        user_dict = user.dict()
+        delete_query = (
+            self.users.update().where(self.users.c.id == user.id).values(user_dict)
+        )
+        await self.database.execute(delete_query)

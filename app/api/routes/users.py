@@ -3,7 +3,12 @@ from fastapi import APIRouter, Body, Depends, HTTPException, status
 from app.api.dependencies.authentication import get_current_user
 from app.config import settings
 from app.models.domain.users import User
-from app.models.schemas.users import UserInResponse, UserInUpdate, UserWithToken
+from app.models.schemas.users import (
+    UserInDelete,
+    UserInResponse,
+    UserInUpdate,
+    UserWithToken,
+)
 from app.resources import strings
 from app.services import jwt
 from app.services.authentication import check_email_is_taken, check_username_is_taken
@@ -54,3 +59,17 @@ async def update_current_user(
     return UserInResponse(
         user=UserWithToken(name=user.name, email=user.email, token=token)
     )
+
+
+@router.delete(
+    "",
+    status_code=status.HTTP_204_NO_CONTENT,
+    name="users:delete-current-user",
+)
+async def delete_current_user(
+    current_user: User = Depends(get_current_user),
+    delete_user: UserInDelete = Body(..., embed=True, alias="user"),
+    user_service: UserService = Depends(UserService),
+):
+    await user_service.delete_user(current_user)
+    return None

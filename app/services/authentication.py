@@ -2,6 +2,15 @@ from app.errors.database import EntityDoesNotExist
 from app.services.users import UserService
 
 
+async def check_id_is_taken(service: UserService, id: str) -> bool:
+    try:
+        await service.get_user_by_id(id=id)
+    except EntityDoesNotExist:
+        return False
+
+    return True
+
+
 async def check_username_is_taken(service: UserService, name: str) -> bool:
     try:
         await service.get_user_by_name(name=name)
