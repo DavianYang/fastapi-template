@@ -50,6 +50,6 @@ jobs:
           SECRET_KEY: secret_key
           DB_CONNECTION: postgres://postgres:postgres@localhost/postgres
         run: |
-          USE_LOCAL_DB_FOR_TEST=true pytest tests
+          USE_LOCAL_DB_FOR_TEST=true poetry run pytest tests
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
