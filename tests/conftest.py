@@ -40,7 +40,7 @@ def postgres_server(docker: libdocker.APIClient) -> None:
         inspection = docker.inspect_container(container["Id"])
         host = inspection["NetworkSettings"]["IPAddress"]
 
-        dsn = f"postgres://postgres:postgres@{host}/postgres"
+        dsn = f"postgresql://postgres:postgres@{host}/postgres"
 
         try:
             ping_postgres(dsn)
