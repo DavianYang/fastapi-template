@@ -1,17 +1,21 @@
-FROM python:3.9.4-alpine
+FROM python:3.8.1-slim
 
-WORKDIR /usr/app
-
-ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-COPY ./requirements.txt /usr/requirements.txt
+EXPOSE 8000
+WORKDIR /app
 
-RUN set -eux \
-    && apk add --no-cache --virtual .build-deps build-base \
-        libressl-dev libffi-dev gcc musl-dev python3-dev \
-    && pip install --upgrade pip setuptools wheel \
-    && pip install -r /usr/requirements.txt \
-    && rm -rf /root/.cache/pip
 
-COPY . /usr/app/
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends netcat && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+COPY poetry.lock pyproject.toml ./
+RUN pip install poetry==1.1 && \
+    poetry config virtualenvs.in-project true && \
+    poetry install --no-dev
+
+COPY . ./
+
+CMD poetry run alembic upgrade head && \
+    poetry run uvicorn --host=0.0.0.0 app.main:app

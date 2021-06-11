@@ -44,6 +44,7 @@ jobs:
       - name: Run tests
         env:
           SECRET_KEY: secret_key
+          DB_CONNECTION: postgres://postgres:postgres@localhost/postgres
         run: |
           USE_LOCAL_DB_FOR_TEST=true poetry run ./scripts/test
       - name: Upload coverage to Codecov

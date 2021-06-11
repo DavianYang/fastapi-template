@@ -1,12 +1,17 @@
-from os import environ, getenv
 import warnings
-from docker import libdocker
+from os import environ, getenv
+from uuid import uuid4
+
+import alembic
 import pytest
 from asgi_lifespan import LifespanManager
-from uuid import uuid4
-import alembic
+from docker import libdocker
 from fastapi import FastAPI
-from tests.testing_helpers import pull_image, ping_postgres
+from httpx import AsyncClient
+
+from app.models.domain.users import UserInDB
+from app.services.users import UserService
+from tests.testing_helpers import ping_postgres, pull_image
 
 POSTGRES_DOCKER_IMAGE = "postgres:11.4-alpine"
 
@@ -29,7 +34,7 @@ def postgres_server(docker: libdocker.APIClient) -> None:
         container = docker.create_container(
             image=POSTGRES_DOCKER_IMAGE,
             name="test-postgres-{}".format(uuid4()),
-            detach=True
+            detach=True,
         )
         docker.start(container=container["Id"])
         inspection = docker.inspect_container(container["Id"])
@@ -68,3 +73,20 @@ def app(apply_migrations: None) -> FastAPI:
 async def initialized_app(app: FastAPI) -> FastAPI:
     async with LifespanManager(app):
         yield app
+
+
+@pytest.fixture
+async def client(initialized_app: FastAPI) -> AsyncClient:
+    async with AsyncClient(
+        app=initialized_app,
+        base_url="http://testserver",
+        headers={"Content-Type": "application/json"},
+    ) as client:
+        yield client
+
+
+@pytest.fixture
+async def test_user() -> UserInDB:
+    return await UserService.create_user(
+        email="test@test.com", password="password", name="testuser"
+    )
