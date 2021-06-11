@@ -1,5 +1,5 @@
 import warnings
-from os import environ, getenv
+from os import getenv
 from uuid import uuid4
 
 import alembic
@@ -9,6 +9,7 @@ from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
 from httpx import AsyncClient
 
+from app.config import settings
 from app.models.domain.users import UserInDB
 from app.services.users import UserService
 from tests.testing_helpers import ping_postgres, pull_image
@@ -44,7 +45,7 @@ def postgres_server(docker: libdocker.APIClient) -> None:
 
         try:
             ping_postgres(dsn)
-            environ["DB_CONNECTION"] = dsn
+            settings.DB_CONNECTION = dsn
 
             yield container
         finally:
