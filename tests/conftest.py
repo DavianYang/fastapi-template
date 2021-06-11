@@ -3,9 +3,9 @@ from os import environ, getenv
 from uuid import uuid4
 
 import alembic
+import docker as libdocker
 import pytest
 from asgi_lifespan import LifespanManager
-from docker import libdocker
 from fastapi import FastAPI
 from httpx import AsyncClient
 
@@ -63,7 +63,7 @@ async def apply_migrations(postgres_server: None) -> None:
 
 
 @pytest.fixture
-def app(apply_migrations: None) -> FastAPI:
+def app() -> FastAPI:  # apply_migrations: None
     from app.main import get_application
 
     return get_application()
