@@ -33,13 +33,13 @@ class Settings(BaseSettings):
 
     # Database
     DB_TYPE: str = "postgresql"
-    DB_USER: str = ""
+    DB_USERNAME: str = ""
     DB_HOST: str = "localhost"
     DB_PASSWORD: str = ""
     DB_PORT: int = 5431
     DB_NAME: str = ""
     DB_CONNECTION: str = (
-        f"{DB_TYPE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+        f"{DB_TYPE}://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
 
     # JWT
