@@ -2,7 +2,7 @@ import warnings
 from os import getenv
 from uuid import uuid4
 
-import alembic
+# import alembic.config
 import docker as libdocker
 import pytest
 from asgi_lifespan import LifespanManager
@@ -56,15 +56,15 @@ def postgres_server(docker: libdocker.APIClient) -> None:
         return
 
 
-@pytest.fixture(autouse=True)
-async def apply_migrations(postgres_server: None) -> None:
-    alembic.config.main(argv=["upgrade", "head"])
-    yield
-    alembic.config.main(argv=["downgrade", "base"])
+# @pytest.fixture(autouse=True)
+# async def apply_migrations(postgres_server: None) -> None:
+#     alembic.config.main(argv=["upgrade", "head"])
+#     yield
+#     alembic.config.main(argv=["downgrade", "base"])
 
 
 @pytest.fixture
-def app() -> FastAPI:  # apply_migrations: None
+def app(postgres_server: None) -> FastAPI:  # apply_migrations: None
     from app.main import get_application
 
     return get_application()
