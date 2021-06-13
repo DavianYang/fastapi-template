@@ -41,7 +41,7 @@ jobs:
 
       - name: Run tests
         env:
-          SECRET_KEY: secret_key
+          SECRET_KEY: 1b7bd6bfb2024ee2105d25431ce05bb1ee24230f2f43a975a4d804b7d2e8341b
           DB_CONNECTION: postgresql://postgres:postgres@localhost/postgres
         run: |
           python -m pytest
