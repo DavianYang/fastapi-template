@@ -25,28 +25,23 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install poetry
-        run: pip install poetry==1.1
+
       - uses: actions/cache@v1
-        id: cache-spec-deps
         with:
-          path: .venv
-          key: venv-conduit-${{ runner.os }}-py-${{ matrix.python-version }}-poetry-${{ hashFiles('poetry.lock') }}
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            venv-conduit-${{ runner.os }}-py-${{ matrix.python-version }}-poetry-
-            venv-conduit-${{ runner.os }}-py-${{ matrix.python-version }}-
-            venv-conduit-${{ runner.os }}-py-
-            venv-conduit-${{ runner.os }}-
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
-        if: steps.cache-spec-deps.outputs.cache-hit != 'true'
         run: |
-          poetry config virtualenvs.in-project true
-          poetry install --no-dev
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+        if: steps.cache.outputs.cache-hit != 'true'
+
       - name: Run newman and test service
         env:
           SECRET_KEY: secret_key
           DB_CONNECTION: postgresql://postgres:postgres@localhost/postgres
         run: |
-          poetry run alembic upgrade head
-          poetry run uvicorn app.main:app
-          poetry run alembic downgrade base
+          uvicorn app.main:app
