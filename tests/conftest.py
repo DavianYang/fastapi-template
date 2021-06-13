@@ -88,6 +88,7 @@ async def client(initialized_app: FastAPI) -> AsyncClient:
 
 @pytest.fixture
 async def test_user() -> UserInDB:
-    return await UserService.create_user(
+    user_service = UserService()
+    return await user_service.create_user(
         email="test@test.com", password="password", name="testuser"
     )
