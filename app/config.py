@@ -57,7 +57,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = ""
 
     # Logging
-    LOGGER_LEVEL: int = logging.DEBUG if Environment.DEVELOPMENT else logging.INFO
+    LOGGER_LEVEL: int = logging.DEBUG if ENV == "dev" else logging.INFO
     LOGGERS: Tuple[str, str] = ("uvicorn.asgi", "uvicorn.access")
 
     class Config:
