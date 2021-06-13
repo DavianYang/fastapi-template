@@ -42,7 +42,7 @@ jobs:
       - name: Run tests
         env:
           SECRET_KEY: secret_key
-          DB_CONNECTION: postgres://postgres:postgres@localhost/postgres
+          DB_CONNECTION: postgresql://postgres:postgres@localhost/postgres
         run: |
           python -m pytest
       - name: Upload coverage to Codecov
