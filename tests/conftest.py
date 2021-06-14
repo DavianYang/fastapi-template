@@ -9,9 +9,9 @@ from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
 from httpx import AsyncClient
 
-from api.services import jwt
 from app.config import settings
 from app.models.domain.users import UserInDB
+from app.services import jwt
 from app.services.users import UserService
 from tests.testing_helpers import ping_postgres, pull_image
 
