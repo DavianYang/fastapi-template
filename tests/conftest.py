@@ -9,6 +9,7 @@ from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
 from httpx import AsyncClient
 
+from api.services import jwt
 from app.config import settings
 from app.models.domain.users import UserInDB
 from app.services.users import UserService
@@ -56,15 +57,8 @@ def postgres_server(docker: libdocker.APIClient) -> None:
         return
 
 
-# @pytest.fixture(autouse=True)
-# async def apply_migrations(postgres_server: None) -> None:
-#     alembic.config.main(argv=["upgrade", "head"])
-#     yield
-#     alembic.config.main(argv=["downgrade", "base"])
-
-
 @pytest.fixture
-def app(postgres_server: None) -> FastAPI:  # apply_migrations: None
+def app(postgres_server: None) -> FastAPI:
     from app.main import get_application
 
     return get_application()
@@ -87,8 +81,32 @@ async def client(initialized_app: FastAPI) -> AsyncClient:
 
 
 @pytest.fixture
+def authorization_prefix() -> str:
+    from app.config import settings
+
+    return settings.JWT_TOKEN_PREFIX
+
+
+@pytest.fixture
 async def test_user() -> UserInDB:
     user_service = UserService()
     return await user_service.create_user(
         email="test@test.com", password="password", name="testuser"
     )
+
+
+@pytest.fixture
+def token(test_user: UserInDB) -> str:
+    return jwt.create_access_token_for_user(test_user, settings.SECRET_KEY)
+
+
+@pytest.fixture
+def authorized_client(
+    client: AsyncClient, token: str, authorization_prefix: str
+) -> AsyncClient:
+    client.headers = {
+        "Authorization": f"{authorization_prefix} {token}",
+        **client.headers,
+    }
+
+    return client

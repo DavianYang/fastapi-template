@@ -19,13 +19,13 @@ async def test_unable_to_login_with_jwt_prefix(
 
 
 async def test_unable_login_when_user_does_no_exist_anymore(
-    app: FastAPI, client: AsyncClient, authentication_prefix: str
+    app: FastAPI, client: AsyncClient, authorization_prefix: str
 ) -> None:
     token = create_access_token_for_user(
         User(name="user", email="email@email.com"), "secret"
     )
     response = await client.get(
         app.url_path_for("users:get-current-user"),
-        headers={"Authorization": f"{authentication_prefix} {token}"},
+        headers={"Authorization": f"{authorization_prefix} {token}"},
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
