@@ -15,7 +15,7 @@ async def test_unable_to_login_with_jwt_prefix(
         app.url_path_for("users:get-current-user"),
         headers={"Authorization": f"Wrong prefix {token}"},
     )
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 
 async def test_unable_login_when_user_does_no_exist_anymore(
@@ -28,4 +28,4 @@ async def test_unable_login_when_user_does_no_exist_anymore(
         app.url_path_for("users:get-current-user"),
         headers={"Authorization": f"{authorization_prefix} {token}"},
     )
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY

@@ -4,12 +4,7 @@ import jwt
 import pytest
 
 from app.config import settings
-from app.models.domain.users import UserInDB
-from app.services.jwt import (
-    create_access_token_for_user,
-    create_jwt_token,
-    get_username_from_token,
-)
+from app.services.jwt import create_jwt_token, get_username_from_token
 
 
 def test_creating_jwt_token() -> None:
@@ -21,19 +16,6 @@ def test_creating_jwt_token() -> None:
     parsed_payload = jwt.decode(token, "secret", algorithms=[settings.ALGORITHM])
 
     assert parsed_payload["content"] == "payload"
-
-
-def test_creating_token_for_user(test_user: UserInDB) -> None:
-    token = create_access_token_for_user(user=test_user, secret_key="secret")
-    parsed_payload = jwt.decode(token, "secret", algorithms=[settings.ALGORITHM])
-
-    assert parsed_payload["username"] == test_user.username
-
-
-def test_retrieving_token_from_user(test_user: UserInDB) -> None:
-    token = create_access_token_for_user(user=test_user, secret_key="secret")
-    username = get_username_from_token(token, "secret")
-    assert username == test_user.username
 
 
 def test_error_when_wrong_token() -> None:
