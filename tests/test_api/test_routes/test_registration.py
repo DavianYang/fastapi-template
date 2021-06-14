@@ -12,14 +12,6 @@ def create_registration_user_demo():
     return {"user": {"email": email, "name": name, "password": password}}
 
 
-async def test_user_success_registration(app: FastAPI, client: AsyncClient) -> None:
-    registration_json = create_registration_user_demo()
-    response = await client.post(
-        app.url_path_for("auth:register", json=registration_json)
-    )
-    assert response.status_code == status.HTTP_201_CREATED
-
-
 @pytest.mark.parametrize(
     "credentials_part, credentials_value",
     (("name", "free_username"), ("email", "free-email@gmail.com")),
