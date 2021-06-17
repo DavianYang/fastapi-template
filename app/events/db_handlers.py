@@ -5,7 +5,7 @@ from app.config import settings
 
 
 async def connect_to_db() -> None:
-    logger.info("Connecting  to {0}", repr(settings.DB_CONNECTION))
+    logger.info("Connecting  to {0}", repr(settings.DATABASE_URL))
 
     await database.connect()
 
