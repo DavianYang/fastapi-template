@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     DB_PASSWORD: str = ""
     DB_PORT: int = 5431
     DB_NAME: str = ""
-    DB_CONNECTION: str = (
+    DATABASE_URL: str = (
         f"{DB_TYPE}://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
     MAX_CONNECTIONS_COUNT: int = 10
